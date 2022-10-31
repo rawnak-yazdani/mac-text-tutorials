@@ -1,0 +1,76 @@
+
+/////////////////////////////////////////////////////////////////////////////////
+
+Adding paths to environment variable:
+
+sudo open .zshrc
+
+export PATH=/Library/PostgreSQL/14/bin/:$PATH       // this is not required if PostgreSQL is install by brew
+PROMPT="%F{cyan}%n %1~ %# %f"
+
+source .zshrc
+
+--------------------------------------------------------
+
+sudo open .bash_profile
+
+export PATH=/Library/PostgreSQL/14/bin/:$PATH
+PROMPT="%F{cyan}%n %1~ %# %f"
+
+source .bash_profile
+
+/////////////////////////////////////////////////////////////////////////////////
+
+PostgreSQL:
+
+brew services start postgresql@14
+
+--------------------------------------------------------
+To enter:
+
+psql postgres
+or,
+psql postgres -U user
+
+--------------------------------------------------------
+
+To see all databases: \l
+--------------------------------------------------------
+
+To see all users: \du
+
+--------------------------------------------------------
+
+To quit from psql: \q
+
+--------------------------------------------------------
+
+CREATE ROLE username WITH LOGIN PASSWORD '1111';
+
+ALTER ROLE rawnak CREATEDB;
+
+ALTER USER rawnak WITH PASSWORD '2222';
+
+CREATE DATABASE myfirstdb;
+
+--------------------------------------------------------
+
+brew services stop postgresql@14
+
+/////////////////////////////////////////////////////////////////////////////////
+
+brew:
+
+brew doctor
+brew update
+
+/////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
