@@ -5,7 +5,7 @@ Adding paths to environment variable:
 
 sudo open .zshrc
 
-export PATH=/Library/PostgreSQL/14/bin/:$PATH       // this is not required if PostgreSQL is install by brew
+export PATH=/Library/PostgreSQL/14/bin/:$PATH       // this is not required if PostgreSQL is installed by brew
 PROMPT="%F{cyan}%n %1~ %# %f"
 
 source .zshrc
@@ -14,7 +14,7 @@ source .zshrc
 
 sudo open .bash_profile
 
-export PATH=/Library/PostgreSQL/14/bin/:$PATH
+export PATH=/Library/PostgreSQL/14/bin/:$PATH       // this is not required if PostgreSQL is installed by brew
 PROMPT="%F{cyan}%n %1~ %# %f"
 
 source .bash_profile
