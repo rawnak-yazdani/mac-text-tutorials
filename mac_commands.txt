@@ -23,28 +23,24 @@ source .bash_profile
 
 PostgreSQL:
 
-brew services start postgresql@14
+To start psql terminal:
 
+brew services start postgresql@14
 --------------------------------------------------------
 To enter:
 
 psql postgres
 or,
 psql postgres -U user
-
 --------------------------------------------------------
-
 To see all databases: \l
 --------------------------------------------------------
-
 To see all users: \du
-
 --------------------------------------------------------
-
 To quit from psql: \q
-
 --------------------------------------------------------
-
+To see pg_hba.conf file location: SHOW hba_file;
+--------------------------------------------------------
 CREATE ROLE username WITH LOGIN PASSWORD '1111';
 
 ALTER ROLE rawnak CREATEDB;
@@ -52,8 +48,21 @@ ALTER ROLE rawnak CREATEDB;
 ALTER USER rawnak WITH PASSWORD '2222';
 
 CREATE DATABASE myfirstdb;
-
 --------------------------------------------------------
+If password is ignored while connecting to the database:
+
+Step 1:
+Open pg_hba.conf file (Generally in mac: /usr/local/var/postgresql@14/pg_hba.conf)
+
+Step 2:
+Change "trust" to "md5" for the both lines of IPv4 and IPv6 in pg_hba.conf
+
+# IPv4 local connections:
+host    all         all         127.0.0.1/32          md5
+# IPv6 local connections:
+host    all         all         ::1/128               md5
+--------------------------------------------------------
+To stop psql terminal:
 
 brew services stop postgresql@14
 
