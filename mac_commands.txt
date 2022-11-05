@@ -87,6 +87,35 @@ mvn package
 
 java -cp target/my-app-1.0-SNAPSHOT.jar com.mycompany.app.App
 
+--------------------------------------------------------
+
+execute maven project from terminal with the help of pom.xml:
+
+pom.xml:
+
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.4.0</version>
+            <configuration>
+                <mainClass>io.welldev.Main</mainClass>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+
+<dependencies>
+    <dependency>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.4.0</version>
+    </dependency>
+</dependencies>
+
+in terminal: mvn exec:java
+
 /////////////////////////////////////////////////////////////////////////////////
 
 
