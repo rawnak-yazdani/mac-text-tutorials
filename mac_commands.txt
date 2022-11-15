@@ -32,6 +32,8 @@ To enter:
 psql postgres
 or,
 psql postgres -U user
+or,
+To connect to a database under a specific user (from main terminal): psql -d welldev -U rawnakyazdani -W
 --------------------------------------------------------
 To see all databases: \l
 --------------------------------------------------------
@@ -39,15 +41,166 @@ To see all users: \du
 --------------------------------------------------------
 To quit from psql: \q
 --------------------------------------------------------
-To see pg_hba.conf file location: SHOW hba_file;
+To connect to a database: \c myfirstdb
+--------------------------------------------------------
+To see tables of a database:
+select * from pg_catalog.pg_tables where schemaname='public';
+or,
+\dt
+--------------------------------------------------------
+SELECT * FROM "schema-name"."table-name";
+or,
+SELECT * FROM "table-name";
+or,
+TABLE "table-name";
+--------------------------------------------------------
+To clear screen: \! clear;
 --------------------------------------------------------
 CREATE ROLE username WITH LOGIN PASSWORD '1111';
 
 ALTER ROLE rawnak CREATEDB;
 
 ALTER USER rawnak WITH PASSWORD '2222';
+--------------------------------------------------------
+Create database:
 
 CREATE DATABASE myfirstdb;
+--------------------------------------------------------
+Create table:
+
+CREATE TABLE weather (
+    city            varchar(80),
+    temp_lo         int,           -- low temperature
+    temp_hi         int,           -- high temperature
+    prcp            real,          -- precipitation
+    date            date
+);
+
+CREATE TABLE accounts (
+    id			int,
+    owner		varchar(80),
+    balance         int
+);
+--------------------------------------------------------
+Inserting into a table:
+
+INSERT INTO accounts (id, title, author_id)
+INSERT INTO accounts (id, owner, balance) VALUES (1, 'Rawnak', 100);
+INSERT INTO accounts (id, owner, balance) VALUES (2, 'Arnob', 100);
+INSERT INTO accounts (id, owner, balance) VALUES (3, 'Abir', 100);
+--------------------------------------------------------
+UPDATE accounts
+SET owner = 'Abir', balance = 200
+WHERE
+id = 3;
+--------------------------------------------------------
+DELETE FROM accounts WHERE condition;
+--------------------------------------------------------
+To see transaction isolation level: SHOW TRANSACTION ISOLATION LEVEL;
+--------------------------------------------------------
+To begin a transaction: BEGIN;
+--------------------------------------------------------
+To set transaction isolation level: SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+--------------------------------------------------------
+To check READ UNCOMMITTED:
+
+BEGIN; (t1)
+    BEGIN; (t2)
+SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; (t1)
+SHOW TRANSACTION ISOLATION LEVEL; (t1)
+    SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; (t2)
+    SHOW TRANSACTION ISOLATION LEVEL; (t2)
+
+SELECT * FROM accounts; (T1)
+    SELECT * FROM accounts WHERE ID = 1; (T2)
+UPDATE accounts SET BALANCE = BALANCE - 10 WHERE ID = 1 RETURNING *; (T1)
+    SELECT * FROM accounts WHERE ID = 1; (T2)
+COMMIT; (T1)
+    SELECT * FROM accounts WHERE ID = 1; (T2)
+--------------------------------------------------------
+To check READ COMMITTED:
+
+BEGIN; (t1)
+    BEGIN; (t2)
+SET TRANSACTION ISOLATION LEVEL READ COMMITTED; (t1)
+SHOW TRANSACTION ISOLATION LEVEL; (t1)
+    SET TRANSACTION ISOLATION LEVEL READ COMMITTED; (t2)
+    SHOW TRANSACTION ISOLATION LEVEL; (t2)
+
+SELECT * FROM accounts; (T1)
+    SELECT * FROM accounts WHERE ID = 1; (T2)
+    SELECT * FROM accounts WHERE BALANCE >= 90; (T2)
+UPDATE accounts SET BALANCE = BALANCE - 10 WHERE ID = 1 RETURNING *; (T1)
+    SELECT * FROM accounts WHERE ID = 1; (T2)
+COMMIT; (T1)
+    SELECT * FROM accounts WHERE ID = 1; (T2)
+    SELECT * FROM accounts WHERE BALANCE >= 90; (T2)
+    COMMIT; (T2)
+--------------------------------------------------------
+To check REPEATABLE READ:
+
+BEGIN; (t1)
+    BEGIN; (t2)
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ; (t1)
+SHOW TRANSACTION ISOLATION LEVEL; (t1)
+    SET TRANSACTION ISOLATION LEVEL REPEATABLE READ; (t2)
+    SHOW TRANSACTION ISOLATION LEVEL; (t2)
+
+SELECT * FROM accounts; (T1)
+    SELECT * FROM accounts WHERE ID = 1; (T2)
+    SELECT * FROM accounts WHERE BALANCE >= 80; (T2)
+UPDATE accounts SET BALANCE = BALANCE - 10 WHERE ID = 1 RETURNING *; (T1)
+COMMIT; (T1)
+    SELECT * FROM accounts WHERE ID = 1; (T2)
+    SELECT * FROM accounts WHERE BALANCE >= 80; (T2)
+    UPDATE accounts SET BALANCE = BALANCE - 10 WHERE ID = 1 RETURNING *; (T2)   [GIVES WRONG RESULT IN MYSQL, BUT ERROR IN POSTGRESQL]
+    ROLLBACK; (T2)
+--------------------------------------------------------
+To check serialization anomaly:
+
+BEGIN; (t1)
+    BEGIN; (t2)
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ; (t1)
+SHOW TRANSACTION ISOLATION LEVEL; (T1)
+    SET TRANSACTION ISOLATION LEVEL REPEATABLE READ; (t2)
+    SHOW TRANSACTION ISOLATION LEVEL; (T2)
+
+SELECT * FROM accounts; (T1)
+SELECT SUM(balance) FROM accounts; (T1)
+INSERT INTO accounts(id, owner, balance) VALUES (3, 'sum', 200); (T1)
+SELECT * FROM accounts; (T1)
+    SELECT * FROM accounts; (T2)
+    SELECT SUM(balance) FROM accounts; (T2)
+    INSERT INTO accounts(id, owner, balance) VALUES (3, 'sum', 200); (T2)
+    SELECT * FROM accounts; (T2)
+COMMIT; (T1)
+    COMMIT; (T2)
+
+SELECT * FROM accounts; (NORMAL DATABASE)
+--------------------------------------------------------
+To check SERIALIZABLE:
+
+BEGIN; (t1)
+    BEGIN; (t2)
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE; (t1)
+SHOW TRANSACTION ISOLATION LEVEL; (T1)
+    SET TRANSACTION ISOLATION LEVEL SERIALIZABLE; (t2)
+    SHOW TRANSACTION ISOLATION LEVEL; (T2)
+
+SELECT * FROM accounts; (T1)
+SELECT SUM(balance) FROM accounts; (T1)
+INSERT INTO accounts(id, owner, balance) VALUES (3, 'sum', 200); (T1)
+SELECT * FROM accounts; (T1)
+    SELECT * FROM accounts; (T2)
+    SELECT SUM(balance) FROM accounts; (T2)
+    INSERT INTO accounts(id, owner, balance) VALUES (3, 'sum', 200); (T2)
+    SELECT * FROM accounts; (T2)
+COMMIT; (T1)
+    COMMIT; (T2)
+
+SELECT * FROM accounts; (NORMAL DATABASE)
+--------------------------------------------------------
+To see pg_hba.conf file location: SHOW hba_file;
 --------------------------------------------------------
 If password is ignored while connecting to the database:
 
