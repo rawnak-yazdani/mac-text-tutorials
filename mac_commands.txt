@@ -35,6 +35,16 @@ psql postgres -U user
 or,
 To connect to a database under a specific user (from main terminal): psql -d welldev -U rawnakyazdani -W
 --------------------------------------------------------
+If error occurs:
+(Bootstrap failed: 5: Input/output error
+Try re-running the command as root for richer errors.
+Error: Failure while executing; `/bin/launchctl bootstrap gui/501 /Users/rawnakyazdani/Library/LaunchAgents/homebrew.mxcl.postgresql@14.plist` exited with 5.)
+or,
+(psql: error: connection to server on socket "/tmp/.s.PGSQL.5432" failed: No such file or directory
+	Is the server running locally and accepting connections on that socket?)
+
+solution: rm /usr/local/var/postgresql@14/postmaster.pid
+--------------------------------------------------------
 To see all databases: \l
 --------------------------------------------------------
 To see all users: \du
@@ -80,6 +90,12 @@ CREATE TABLE accounts (
     id			int,
     owner		varchar(80),
     balance         int
+);
+
+CREATE TABLE Person (
+    id	            SERIAL           PRIMARY KEY,
+    name            varchar(80)      NOT NULL       DEFAULT '',
+    country         varchar(80)      DEFAULT NULL
 );
 --------------------------------------------------------
 Inserting into a table:
