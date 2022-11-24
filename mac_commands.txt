@@ -97,6 +97,22 @@ CREATE TABLE Person (
     name            varchar(80)      NOT NULL       DEFAULT '',
     country         varchar(80)      DEFAULT NULL
 );
+
+CREATE TABLE illuminati (
+   id               SERIAL             PRIMARY KEY,
+   name             VARCHAR(80)        NOT NULL,
+   country          VARCHAR(80)        NOT NULL,
+   designation      VARCHAR(80),
+   balance          INT                NOT NULL
+);
+--------------------------------------------------------
+CREATE SEQUENCE project_seq
+INCREMENT 1
+START 1;
+--------------------------------------------------------
+drop sequence project_seq;
+--------------------------------------------------------
+drop table actor, director, genre, movie, movie_actors, movie_genre;
 --------------------------------------------------------
 Inserting into a table:
 
