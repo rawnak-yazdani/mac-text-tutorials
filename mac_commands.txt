@@ -33,7 +33,8 @@ psql postgres
 or,
 psql postgres -U user
 or,
-To connect to a database under a specific user (from main terminal): psql -d welldev -U rawnakyazdani -W
+To connect to a database under a specific user (from main terminal):
+psql -d welldev -U rawnakyazdani -W
 --------------------------------------------------------
 If error occurs:
 (Bootstrap failed: 5: Input/output error
@@ -66,15 +67,23 @@ TABLE "table-name";
 --------------------------------------------------------
 To clear screen: \! clear;
 --------------------------------------------------------
-CREATE ROLE username WITH LOGIN PASSWORD '1111';
+CREATE ROLE rawnakyazdani WITH LOGIN PASSWORD '2222';
+or,
+CREATE ROLE rawnakyazdani WITH LOGIN SUPERUSER CREATEDB CREATEROLE PASSWORD '2222';
 
-ALTER ROLE rawnak CREATEDB;
+ALTER ROLE rawnakyazdani CREATEDB;
 
-ALTER USER rawnak WITH PASSWORD '2222';
+ALTER USER rawnakyazdani WITH PASSWORD '2222';
+
+To see all roles: SELECT rolname FROM pg_roles;
 --------------------------------------------------------
 Create database:
 
 CREATE DATABASE myfirstdb;
+or,
+CREATE DATABASE sales OWNER rawnakyazdani;
+or,
+sudo -u postgres psql -c "CREATE DATABASE testdb;"
 --------------------------------------------------------
 Create table:
 
@@ -110,9 +119,9 @@ CREATE SEQUENCE project_seq
 INCREMENT 1
 START 1;
 --------------------------------------------------------
-drop sequence project_seq;
+drop sequence project_seq1, project_seq2, project_seq3, project_seq4, project_seq5;
 --------------------------------------------------------
-drop table actor, director, genre, movie, movie_actors, movie_genre;
+drop table actor, director, genre, movie, country, movie_actors, movie_genre;
 --------------------------------------------------------
 Inserting into a table:
 
@@ -321,8 +330,65 @@ or,
 
 /////////////////////////////////////////////////////////////////////////////////
 
+Hibernate rough:
 
+private static void insertData(ActorDAO actorDAO, DirectorDAO directorDAO, GenreDAO genreDAO, MovieDAO movieDAO, CountryDAO countryDAO) {
 
+        List<Genre> allGenres = Arrays.asList(
+                new Genre("Action"),
+                new Genre("Crime"),
+                new Genre("Thriller"),
+                new Genre("Drama")
+        );
 
+        List<Genre> genresOfDhoom2 = Arrays.asList(
+                new Genre("Action"),
+                new Genre("Crime"),
+                new Genre("Thriller")
+        );
+
+        List<Genre> genresOfDhoom3 = Arrays.asList(
+                new Genre("Action"),
+                new Genre("Crime"),
+                new Genre("Drama")
+        );
+
+        List<Actor> allActors = Arrays.asList(
+                new Actor("Abhishek Bachchan"),
+                new Actor("Uday Chopra"),
+                new Actor("Hrithik Roshan"),
+                new Actor("Aamir Khan")
+        );
+
+        List<Actor> actorsOfDhoom2 = Arrays.asList(
+                new Actor("Abhishek Bachchan"),
+                new Actor("Uday Chopra"),
+                new Actor("Hrithik Roshan")
+        );
+
+        List<Actor> actorsOfDhoom3 = Arrays.asList(
+                new Actor("Abhishek Bachchan"),
+                new Actor("Uday Chopra"),
+                new Actor("Aamir Khan")
+        );
+
+        Director directorOfDhoom2 = new Director("Sanjay Gadhvi");
+        Director directorOfDhoom3 = new Director("Vijay Krishna Acharya");
+        Country country = new Country("India");
+        Movie dhoom2 = new Movie("Dhoom 2", new HashSet<Genre>(genresOfDhoom2),
+                "6.5/10", directorOfDhoom2, new HashSet<Actor>(actorsOfDhoom2), 2006, country);
+        Movie dhoom3 = new Movie("Dhoom 3", new HashSet<Genre>(genresOfDhoom3),
+                "5.4/10", directorOfDhoom3, new HashSet<Actor>(actorsOfDhoom3), 2013, country);
+
+        genreDAO.addAll(allGenres);
+        actorDAO.addAll(allActors);
+        directorDAO.add(directorOfDhoom2);
+        directorDAO.add(directorOfDhoom3);
+        countryDAO.add(country);
+        movieDAO.add(dhoom2);
+        movieDAO.add(dhoom3);
+    }
+
+/////////////////////////////////////////////////////////////////////////////////
 
 
