@@ -34,7 +34,7 @@ or,
 psql postgres -U user
 or,
 To connect to a database under a specific user (from main terminal):
-psql -d welldev -U rawnakyazdani -W
+psql -d movie_box -U postgres -W
 --------------------------------------------------------
 If error occurs:
 (Bootstrap failed: 5: Input/output error
@@ -76,6 +76,8 @@ ALTER ROLE rawnakyazdani CREATEDB;
 ALTER USER rawnakyazdani WITH PASSWORD '2222';
 
 To see all roles: SELECT rolname FROM pg_roles;
+
+To change role name: ALTER ROLE role_name rename TO new_name;
 --------------------------------------------------------
 Create database:
 
