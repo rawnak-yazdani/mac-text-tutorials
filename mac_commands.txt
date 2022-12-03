@@ -122,6 +122,7 @@ INCREMENT 1
 START 1;
 --------------------------------------------------------
 drop sequence project_seq1, project_seq2, project_seq3, project_seq4, project_seq5;
+drop sequence admin_seq, movie_seq, genre_seq, user_seq;
 --------------------------------------------------------
 drop table actor, director, genre, movie, country, movie_actors, movie_genre;
 --------------------------------------------------------
