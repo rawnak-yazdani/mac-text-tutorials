@@ -127,6 +127,7 @@ drop table actor, admin, admin_credentials, admincredentials, cinephile, cinephi
 drop table admin, admin_credentials, cinephile, cinephile_credentials, country, genre, movie, movie_genre, movie_cinephile;
 --------------------------------------------------------
 drop table actor, director, genre, movie, country, movie_actors, movie_genre;
+drop table movie, genre, app_user, movie_app_user, movie_genre;
 --------------------------------------------------------
 Inserting into a table:
 
